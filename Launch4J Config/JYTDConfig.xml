@@ -6,7 +6,7 @@
   <outfile>C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
-  <chdir></chdir>
+  <chdir>.</chdir>
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>

@@ -97,7 +97,7 @@ public class Command {
         // Extract sting
         String curLine;
         while ((curLine = reader.readLine()) != null) {
-            output += " " + curLine;
+            output += " \nNL:" + curLine;
         }
 
         // If line is very short

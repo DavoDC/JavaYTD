@@ -3,77 +3,7 @@
 Version:	3.12
 CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
 WOW64:		yes
-Create mutex:	DayStarter
-Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\-
-Java min ver:	1.000.000
-Java max ver:	1.010.000_001
-64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
-32-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
-64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
-Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
-Check launcher:	C:\DevTools\Java\jdk1.8.0_251\bin\javaw.exe (not found)
-Ignore:		1.008.000
-Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_251
-Check launcher:	C:\DevTools\Java\jdk1.8.0_251\bin\javaw.exe (not found)
-Ignore:		1.008.000_251
-32-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
-64-bit search:	SOFTWARE\JavaSoft\JRE...
-32-bit search:	SOFTWARE\JavaSoft\JRE...
-64-bit search:	SOFTWARE\JavaSoft\JDK...
-Check:		SOFTWARE\JavaSoft\JDK\14.0.1
-Ignore:		1.014.000_001
-32-bit search:	SOFTWARE\JavaSoft\JDK...
-64-bit search:	SOFTWARE\IBM\Java Runtime Environment...
-32-bit search:	SOFTWARE\IBM\Java Runtime Environment...
-64-bit search:	SOFTWARE\IBM\Java Development Kit...
-32-bit search:	SOFTWARE\IBM\Java Development Kit...
-64-bit search:	SOFTWARE\IBM\Java2 Runtime Environment...
-32-bit search:	SOFTWARE\IBM\Java2 Runtime Environment...
-64-bit search:	SOFTWARE\IBM\Java Development Kit...
-32-bit search:	SOFTWARE\IBM\Java Development Kit...
-Error msg:	This application requires Java (JRE) 1.0 - 10.0.1
-The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.
-Open URL:	http://java.com/download
-
-
-Version:	3.12
-CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
-WOW64:		yes
-Create mutex:	DayStarter
-Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\-
-Java min ver:	1.058.000
-Java max ver:	1.100.000
-64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
-32-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
-64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
-Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
-Ignore:		1.008.000
-Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_251
-Ignore:		1.008.000_251
-32-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
-64-bit search:	SOFTWARE\JavaSoft\JRE...
-32-bit search:	SOFTWARE\JavaSoft\JRE...
-64-bit search:	SOFTWARE\JavaSoft\JDK...
-Check:		SOFTWARE\JavaSoft\JDK\14.0.1
-Ignore:		1.014.000_001
-32-bit search:	SOFTWARE\JavaSoft\JDK...
-64-bit search:	SOFTWARE\IBM\Java Runtime Environment...
-32-bit search:	SOFTWARE\IBM\Java Runtime Environment...
-64-bit search:	SOFTWARE\IBM\Java Development Kit...
-32-bit search:	SOFTWARE\IBM\Java Development Kit...
-64-bit search:	SOFTWARE\IBM\Java2 Runtime Environment...
-32-bit search:	SOFTWARE\IBM\Java2 Runtime Environment...
-64-bit search:	SOFTWARE\IBM\Java Development Kit...
-32-bit search:	SOFTWARE\IBM\Java Development Kit...
-Error msg:	This application requires Java (JRE) 58 - 100
-Open URL:	http://java.com/download
-
-
-Version:	3.12
-CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
-WOW64:		yes
 Create mutex:	JavaYTD
-Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\-
 Java min ver:	1.002.000
 Java max ver:	1.100.000
 64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
@@ -103,7 +33,6 @@ Version:	3.12
 CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
 WOW64:		yes
 Create mutex:	JavaYTD
-Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\-
 Java min ver:	1.002.000
 Java max ver:	1.100.000
 64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
@@ -133,7 +62,6 @@ Version:	3.12
 CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
 WOW64:		yes
 Create mutex:	JavaYTD
-Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\-
 Java min ver:	1.002.000
 Java max ver:	1.100.000
 64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
@@ -163,7 +91,7 @@ Version:	3.12
 CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
 WOW64:		yes
 Create mutex:	JavaYTD
-Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\-
+Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\.
 Java min ver:	1.002.000
 Java max ver:	1.100.000
 64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
@@ -193,7 +121,7 @@ Version:	3.12
 CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
 WOW64:		yes
 Create mutex:	JavaYTD
-Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\-
+Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\.
 Java min ver:	1.002.000
 Java max ver:	1.100.000
 64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
@@ -223,6 +151,67 @@ Version:	3.12
 CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
 WOW64:		yes
 Create mutex:	JavaYTD
+Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\.
+Java min ver:	1.002.000
+Java max ver:	1.100.000
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+32-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Check launcher:	C:\DevTools\Java\jdk1.8.0_251\bin\javaw.exe (not found)
+Ignore:		1.008.000
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_251
+Check launcher:	C:\DevTools\Java\jdk1.8.0_251\bin\javaw.exe (not found)
+Ignore:		1.008.000_251
+32-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+64-bit search:	SOFTWARE\JavaSoft\JRE...
+32-bit search:	SOFTWARE\JavaSoft\JRE...
+64-bit search:	SOFTWARE\JavaSoft\JDK...
+Check:		SOFTWARE\JavaSoft\JDK\14.0.1
+Check launcher:	C:\DevTools\Java\jdk-14.0.1\bin\javaw.exe (OK)
+Match:		1.014.000_001
+Runtime used:	1.014.000_001 (64-bit)
+Launcher:	C:\DevTools\Java\jdk-14.0.1\bin\javaw.exe
+Launcher args:	-jar "C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe"
+Args length:	65/32768 chars
+Exit code:	0
+
+
+Version:	3.12
+CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
+WOW64:		yes
+Create mutex:	JavaYTD
+Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\.
+Java min ver:	1.002.000
+Java max ver:	1.100.000
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+32-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Check launcher:	C:\DevTools\Java\jdk1.8.0_251\bin\javaw.exe (not found)
+Ignore:		1.008.000
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_251
+Check launcher:	C:\DevTools\Java\jdk1.8.0_251\bin\javaw.exe (not found)
+Ignore:		1.008.000_251
+32-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+64-bit search:	SOFTWARE\JavaSoft\JRE...
+32-bit search:	SOFTWARE\JavaSoft\JRE...
+64-bit search:	SOFTWARE\JavaSoft\JDK...
+Check:		SOFTWARE\JavaSoft\JDK\14.0.1
+Check launcher:	C:\DevTools\Java\jdk-14.0.1\bin\javaw.exe (OK)
+Match:		1.014.000_001
+Runtime used:	1.014.000_001 (64-bit)
+Launcher:	C:\DevTools\Java\jdk-14.0.1\bin\javaw.exe
+Launcher args:	-jar "C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe"
+Args length:	65/32768 chars
+Exit code:	0
+
+
+Version:	3.12
+CmdLine:	C:\Users\David\GitHub Repos\JavaYTD\Executable\JavaYTD.exe --l4j-debug
+WOW64:		yes
+Create mutex:	JavaYTD
+Working dir:	C:\Users\David\GitHub Repos\JavaYTD\Executable\.
 Java min ver:	1.002.000
 Java max ver:	1.100.000
 64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...

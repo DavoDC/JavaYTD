@@ -8,8 +8,8 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
@@ -28,7 +28,7 @@ public class GUI extends JFrame {
 
     // Program details
     public static final String PROGRAM = "JavaYTD";
-    public static final double VERSION = 1.0;
+    public static final double VERSION = 1.2;
 
     // Main objects
     private static Code code;
@@ -70,7 +70,6 @@ public class GUI extends JFrame {
                 System.exit(1);
             }
         });
-
     }
 
     /**
@@ -149,11 +148,16 @@ public class GUI extends JFrame {
         javax.swing.JPanel panel = new javax.swing.JPanel();
         javax.swing.JLabel title = new javax.swing.JLabel();
         javax.swing.JButton downloadBut = new javax.swing.JButton();
-        javax.swing.JTextField urlField = new javax.swing.JTextField();
         javax.swing.JLabel urlLabel = new javax.swing.JLabel();
         javax.swing.JCheckBox exitCheckbox = new javax.swing.JCheckBox();
+        javax.swing.JTextField urlField = new javax.swing.JTextField();
+        javax.swing.JLabel outLabel = new javax.swing.JLabel();
+        javax.swing.JButton parseBut = new javax.swing.JButton();
+        javax.swing.JComboBox<String> formatCB = new javax.swing.JComboBox<>();
+        javax.swing.JButton resetBut = new javax.swing.JButton();
         javax.swing.JMenuBar jMenuBar1 = new javax.swing.JMenuBar();
-        javax.swing.JMenu menu = new javax.swing.JMenu();
+        javax.swing.JMenu sitesMenu = new javax.swing.JMenu();
+        javax.swing.JMenu readmeMenu = new javax.swing.JMenu();
 
         jMenu3.setText("File");
         jMenuBar2.add(jMenu3);
@@ -209,7 +213,7 @@ public class GUI extends JFrame {
         setResizable(false);
         setSize(new java.awt.Dimension(800, 450));
 
-        panel.setBackground(new java.awt.Color(153, 153, 153));
+        panel.setBackground(new java.awt.Color(255, 255, 204));
         panel.setForeground(new java.awt.Color(255, 255, 255));
         panel.setName("panel"); // NOI18N
         panel.setPreferredSize(new java.awt.Dimension(800, 450));
@@ -228,6 +232,7 @@ public class GUI extends JFrame {
         downloadBut.setAlignmentY(0.0F);
         downloadBut.setBorder(null);
         downloadBut.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        downloadBut.setEnabled(false);
         downloadBut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         downloadBut.setIconTextGap(0);
         downloadBut.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -235,16 +240,6 @@ public class GUI extends JFrame {
         downloadBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 downloadButAction(evt);
-            }
-        });
-
-        urlField.setBackground(new java.awt.Color(255, 255, 255));
-        urlField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        urlField.setForeground(new java.awt.Color(0, 0, 0));
-        urlField.setName("URLfield"); // NOI18N
-        urlField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                urlFieldFocusGained(evt);
             }
         });
 
@@ -264,52 +259,155 @@ public class GUI extends JFrame {
         exitCheckbox.setIconTextGap(8);
         exitCheckbox.setName("exitCheckbox"); // NOI18N
 
+        urlField.setBackground(new java.awt.Color(255, 255, 255));
+        urlField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        urlField.setForeground(new java.awt.Color(0, 0, 0));
+        urlField.setName("URLfield"); // NOI18N
+        urlField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                urlFieldFocusGained(evt);
+            }
+        });
+
+        outLabel.setBackground(new java.awt.Color(0, 0, 0));
+        outLabel.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        outLabel.setForeground(new java.awt.Color(0, 0, 0));
+        outLabel.setText("Output:");
+        outLabel.setName("outLabel"); // NOI18N
+
+        parseBut.setBackground(new java.awt.Color(255, 153, 51));
+        parseBut.setFont(new java.awt.Font("Segoe UI", 3, 28)); // NOI18N
+        parseBut.setForeground(new java.awt.Color(0, 0, 0));
+        parseBut.setToolTipText("");
+        parseBut.setAlignmentY(0.0F);
+        parseBut.setBorder(null);
+        parseBut.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        parseBut.setEnabled(false);
+        parseBut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        parseBut.setIconTextGap(0);
+        parseBut.setLabel("Parse");
+        parseBut.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        parseBut.setName("parseBut"); // NOI18N
+        parseBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                parseButActionPerformed(evt);
+            }
+        });
+
+        formatCB.setBackground(new java.awt.Color(255, 255, 102));
+        formatCB.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        formatCB.setForeground(new java.awt.Color(0, 0, 0));
+        formatCB.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        formatCB.setEnabled(false);
+        formatCB.setName("formatCB"); // NOI18N
+        formatCB.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                formatCBFocusGained(evt);
+            }
+        });
+
+        resetBut.setBackground(new java.awt.Color(102, 255, 153));
+        resetBut.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        resetBut.setForeground(new java.awt.Color(0, 0, 0));
+        resetBut.setText("Reset");
+        resetBut.setToolTipText("");
+        resetBut.setAlignmentY(0.0F);
+        resetBut.setBorder(null);
+        resetBut.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        resetBut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        resetBut.setIconTextGap(0);
+        resetBut.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        resetBut.setName("resetBut"); // NOI18N
+        resetBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetButActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(downloadBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panelLayout.createSequentialGroup()
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelLayout.createSequentialGroup()
-                        .addGap(266, 266, 266)
-                        .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(33, 33, 33)
+                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(parseBut, javax.swing.GroupLayout.PREFERRED_SIZE, 896, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(outLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 896, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(downloadBut, javax.swing.GroupLayout.PREFERRED_SIZE, 896, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(panelLayout.createSequentialGroup()
+                                            .addComponent(exitCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(resetBut, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(panelLayout.createSequentialGroup()
+                                    .addComponent(urlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, 830, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(formatCB, javax.swing.GroupLayout.PREFERRED_SIZE, 896, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(exitCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelLayout.createSequentialGroup()
-                                .addComponent(urlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, 830, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(40, Short.MAX_VALUE))
+                        .addGap(266, 266, 266)
+                        .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(urlLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 284, Short.MAX_VALUE)
-                .addComponent(exitCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(downloadBut, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(urlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(parseBut, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(formatCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(exitCheckbox)
+                    .addComponent(resetBut, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(downloadBut, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(outLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
+        jMenuBar1.setBackground(new java.awt.Color(204, 204, 204));
         jMenuBar1.setBorder(null);
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
-        menu.setText("Supported Sites");
-        menu.addMouseListener(new java.awt.event.MouseAdapter() {
+        sitesMenu.setBackground(new java.awt.Color(255, 255, 255));
+        sitesMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        sitesMenu.setForeground(new java.awt.Color(0, 0, 0));
+        sitesMenu.setText("Supported Sites");
+        sitesMenu.setMaximumSize(new java.awt.Dimension(140, 32767));
+        sitesMenu.setName("sitesMenu"); // NOI18N
+        sitesMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuClick(evt);
+                sitesMenuClick(evt);
             }
         });
-        jMenuBar1.add(menu);
+        jMenuBar1.add(sitesMenu);
+
+        readmeMenu.setBackground(new java.awt.Color(255, 255, 255));
+        readmeMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        readmeMenu.setForeground(new java.awt.Color(0, 0, 0));
+        readmeMenu.setText("youtube-dl Readme");
+        readmeMenu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        readmeMenu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        readmeMenu.setMaximumSize(new java.awt.Dimension(140, 32767));
+        readmeMenu.setName("readmeMenu"); // NOI18N
+        readmeMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                readmeMenuMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(readmeMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -323,9 +421,7 @@ public class GUI extends JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -339,11 +435,12 @@ public class GUI extends JFrame {
     private void downloadButAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButAction
 
         // Process options
-        code.processOptions();
+        code.processDwlReq();
     }//GEN-LAST:event_downloadButAction
 
     /**
-     * When URL field gains focus, extract data from clipboard automatically
+     * When URL field gains focus, extract data from clipboard automatically,
+     * and enable parse button
      *
      * @param evt
      */
@@ -357,31 +454,124 @@ public class GUI extends JFrame {
             // Get textfield and change text
             JTextField txtField = (JTextField) evt.getSource();
             txtField.setText(data);
+
+            // Enable parse button
+            GUI.gui.getParseBut().setEnabled(true);
+
         } catch (UnsupportedFlavorException | IOException ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+
+            // Log only and do NOT quit
+            System.out.println("Clipboard error\n");
         }
     }//GEN-LAST:event_urlFieldFocusGained
 
     /**
-     * When menu item is clicked, open supported sites page
+     * When sites menu is clicked, open supported sites page
      *
      * @param evt
      */
-    private void menuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuClick
+    private void sitesMenuClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sitesMenuClick
 
-        // Supported sites page
+        // Open supported sites URL
         String sites;
         sites = "https://github.com/ytdl-org/youtube-dl/";
         sites += "blob/master/docs/supportedsites.md";
+        code.openURL(sites);
+    }//GEN-LAST:event_sitesMenuClick
 
-        // Make command
-        String[] args = {sites};
-        Command comm = new Command("explorer.exe", args);
+    /**
+     * Parse URL given
+     *
+     * @param evt
+     */
+    private void parseButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parseButActionPerformed
 
-        // Run command
-        comm.run();
-    }//GEN-LAST:event_menuClick
+        // Parse URL
+        code.parseURL();
+    }//GEN-LAST:event_parseButActionPerformed
 
+    /**
+     * When format selector gains focus, enable download button
+     *
+     * @param evt
+     */
+    private void formatCBFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formatCBFocusGained
+
+        // Enable download button
+        getDownloadBut().setEnabled(true);
+    }//GEN-LAST:event_formatCBFocusGained
+
+    /**
+     * Reset button action
+     *
+     * @param evt
+     */
+    private void resetButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButActionPerformed
+
+        // Reset URL field
+        getURLField().setText("");
+
+        // Enable parse button
+        getParseBut().setEnabled(true);
+
+        // Remove format options and disable format selector
+        JComboBox formatCB = getFormatCB();
+        formatCB.removeAllItems();
+        formatCB.setEnabled(false);
+
+        // Disable download button
+        getDownloadBut().setEnabled(false);
+    }//GEN-LAST:event_resetButActionPerformed
+
+    /**
+     * When readme menu clicked, open readme page
+     *
+     * @param evt
+     */
+    private void readmeMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_readmeMenuMouseClicked
+
+        // Open readme URL
+        String readme;
+        readme = "https://github.com/ytdl-org/youtube-dl/";
+        readme += "blob/master/README.md";
+        code.openURL(readme);
+    }//GEN-LAST:event_readmeMenuMouseClicked
+
+    /**
+     * Get URL text field
+     *
+     * @return
+     */
+    public JTextField getURLField() {
+        return (JTextField) getComponentByName("urlField");
+    }
+
+    /**
+     * Get format combo box
+     *
+     * @return
+     */
+    public JComboBox getFormatCB() {
+        return (JComboBox) getComponentByName("formatCB");
+    }
+
+    /**
+     * Get download button
+     *
+     * @return
+     */
+    public JButton getDownloadBut() {
+        return (JButton) getComponentByName("downloadBut");
+    }
+
+    /**
+     * Get parse button
+     *
+     * @return
+     */
+    public JButton getParseBut() {
+        return (JButton) getComponentByName("parseBut");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
