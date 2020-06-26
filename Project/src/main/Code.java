@@ -29,9 +29,15 @@ public class Code {
      */
     public Code() {
 
+        // Notify
+        System.out.println("\nStatus of 'youtube-dl.exe': ");
+
         // If youtube-dl program does not exist
         File progExe = new File(progPath);
         if (!progExe.exists()) {
+
+            // Notify
+            System.out.println("Not found. Will be downloaded");
 
             // Get youtube-dl program
             String prog = "curl";
@@ -53,8 +59,12 @@ public class Code {
                 reportErr(e);
             }
         } else {
-            System.out.println("Found existing youtube-dl.exe");
+            // Notify
+            System.out.println("Found pre-existing");
         }
+
+        // Space
+        System.out.println("\n");
     }
 
     /**
@@ -85,12 +95,11 @@ public class Code {
 
                 // Conditions for good lines
                 boolean lenGood = curFmtS.length() > 3;
-                boolean notWeb = !curFmtS.contains("webpage");
-                boolean notAvail = !curFmtS.contains("Available");
-                boolean notColNames = !curFmtS.contains("extension");
+                boolean notOther = !curFmtS.contains("[");
+                boolean firstCharNum = Character.isDigit(curFmtS.charAt(0));
 
                 // If line passes checks
-                if (lenGood && notWeb && notAvail && notColNames) {
+                if (lenGood && notOther && firstCharNum) {
 
                     // Add to combo box
                     formatCB.addItem(curFmtS);

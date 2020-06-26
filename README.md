@@ -1,2 +1,4 @@
 # JavaYTD
-A Java YouTube downloader built on top of youtube-dl
+
+![Preview](https://github.com/DavoDC/JavaYTD/blob/master/Preview.png)
+
