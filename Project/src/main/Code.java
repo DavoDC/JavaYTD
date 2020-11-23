@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.stream.Stream;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 
 /**
  * Contains 'back-end' methods
@@ -89,6 +88,9 @@ public class Code {
 
             // Remove options
             formatCB.removeAllItems();
+
+            // Add default option
+            formatCB.addItem("Default");
 
             // Add certain output lines as formats
             for (String curFmtS : formats) {
@@ -174,7 +176,7 @@ public class Code {
         boolean success;
 
         // Output
-        String output = "Output: ";
+        String output = "";
 
         // If output indicates success
         if (comm.getOutput().contains(successPart)) {
@@ -192,10 +194,8 @@ public class Code {
             success = false;
         }
 
-        // Display output line
-        JLabel outLabel;
-        outLabel = (JLabel) GUI.gui.getComponentByName("outLabel");
-        outLabel.setText(output);
+        // Set output
+        GUI.gui.setOutputLabel(output);
 
         // Return status
         return success;
@@ -215,14 +215,28 @@ public class Code {
         String url = GUI.gui.getURLField().getText();
         String[] urlArg = {url};
 
-        // Add extra arguments
-        String[] args = Stream.concat(
-                Arrays.stream(urlArg),
-                Arrays.stream(extraArgs))
-                .toArray(String[]::new);
+        // Command
+        Command comm;
 
-        // Make command and run
-        Command comm = new Command(prog, args);
+        // If no extra arguments
+        if (extraArgs == null) {
+
+            // Make command with just URL
+            comm = new Command(prog, urlArg);
+
+        } else {
+
+            // Add extra arguments to URL
+            String[] args = Stream.concat(
+                    Arrays.stream(urlArg),
+                    Arrays.stream(extraArgs))
+                    .toArray(String[]::new);
+
+            // Make command with combined arguments
+            comm = new Command(prog, args);
+        }
+
+        // Run command
         comm.run();
 
         // Return command
@@ -236,18 +250,27 @@ public class Code {
      */
     private boolean downloadVid() {
 
-        // Extract code of selected format
+        // Extract format string option
         JComboBox formatCB = GUI.gui.getFormatCB();
         String formatS = (String) formatCB.getSelectedItem();
-        formatS = formatS.substring(0, 6).trim();
-        int formatCode = Integer.parseInt(formatS);
 
         // Create arguments
-        String[] extraArgs = new String[2];
-        extraArgs[0] = "--format";
-        extraArgs[1] = "" + formatCode + "";
+        String[] extraArgs = null;
 
-        // Get format list for URL
+        // If default format not selected
+        if (!formatS.equalsIgnoreCase("Default")) {
+
+            // Extract code of selected format
+            formatS = formatS.substring(0, 6).trim();
+            int formatCode = Integer.parseInt(formatS);
+
+            // Add to arguments
+            extraArgs = new String[2];
+            extraArgs[0] = "--format";
+            extraArgs[1] = "" + formatCode + "";
+        }
+
+        // Run YTDL with args
         Command comm = runYTDL(extraArgs);
 
         // Process output and return status

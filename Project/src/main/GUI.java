@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
@@ -521,6 +522,9 @@ public class GUI extends JFrame {
 
         // Disable download button
         getDownloadBut().setEnabled(false);
+
+        // Reset output label
+        setOutputLabel("");
     }//GEN-LAST:event_resetButActionPerformed
 
     /**
@@ -536,6 +540,21 @@ public class GUI extends JFrame {
         readme += "blob/master/README.md";
         code.openURL(readme);
     }//GEN-LAST:event_readmeMenuMouseClicked
+
+    /**
+     * Set output field
+     *
+     * @param newOutput
+     */
+    public void setOutputLabel(String newOutput) {
+
+        // Get label
+        JLabel outLabel;
+        outLabel = (JLabel) GUI.gui.getComponentByName("outLabel");
+
+        // Set text
+        outLabel.setText("Output: " + newOutput);
+    }
 
     /**
      * Get URL text field
