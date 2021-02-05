@@ -21,7 +21,7 @@ public class Command {
     private String errOutput;
 
     /**
-     * Initialize
+     * Initialize command with program name and arg array
      *
      * @param progName Program
      * @param args Arguments
@@ -41,6 +41,17 @@ public class Command {
         cmdList.add("cmd");
         cmdList.add("/c");
         cmdList.add(commS);
+    }
+
+    /**
+     * Initialize command with program name and arg list
+     *
+     * @param progName Program
+     * @param argList
+     */
+    public Command(String progName, ArrayList<String> argList) {
+
+        this(progName, argList.toArray(new String[0]));
     }
 
     /**
