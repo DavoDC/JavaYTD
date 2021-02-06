@@ -44,7 +44,7 @@ public class Command {
     }
 
     /**
-     * Initialize command with program name and arg list
+     * Initialize command with program name and arg list (wrapper constructor)
      *
      * @param progName Program
      * @param argList
@@ -65,25 +65,17 @@ public class Command {
             pb.command(cmdList);
             Process p = pb.start();
 
-            // Notify user about command run
-            System.out.println("Command: \n" + cmdList.get(2));
-
             // Extract output
             normOutput = getStringFromStream(p.getInputStream());
             errOutput = getStringFromStream(p.getErrorStream());
 
-            // Print output   
-            System.out.println("Output: " + normOutput);
-            System.out.println("Errors: " + errOutput);
-
-            // Space
-            System.out.println("");
+            // Always print full output (console only)
+            printOutput();
 
         } catch (IOException e) {
 
-            // Print error info and exit
-            System.err.print(e.toString());
-            System.exit(1);
+            // Print error info
+            Code.outputerr(e);
         }
     }
 
@@ -120,6 +112,24 @@ public class Command {
 
         // Return output;
         return output;
+    }
+
+    /**
+     * Print both normal and error output
+     */
+    public void printOutput() {
+        System.out.println();
+        System.out.println("Output: " + normOutput);
+        System.out.println("Errors: " + errOutput);
+        System.out.println();
+    }
+
+    /**
+     * Get string representation of command (as it would be manually typed)
+     */
+    @Override
+    public String toString() {
+        return "\nCommand: \n" + cmdList.get(2);
     }
 
     /**

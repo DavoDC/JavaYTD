@@ -7,11 +7,8 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Stream;
 import javax.swing.JComboBox;
 
 /**
@@ -21,50 +18,60 @@ import javax.swing.JComboBox;
  */
 public class Code {
 
+    // Default option string
+    private final String defOpt = "Default/Best";
+
     // Timer
     private final Timer timer;
+
+    // FileIO helper object
+    public static FileIO fio;
 
     // Path to youtube-dl.exe
     private final String ytdlPath = "youtube-dl.exe";
 
     // The user's downloads folder path
-    private final String downloadsPath;
+    public static String downloadsPath;
 
     /**
      * Create a code object
      */
     public Code() {
 
+        // Output program info
+        outputln("Welcome to " + GUI.PROGRAM + " " + GUI.VERSION + ".");
+        outputln("This is a GUI for the youtube-dl CLI program.");
+
         // Initialize timer
         timer = new Timer();
 
-        // Notify
-        String welcome = "Welcome to " + GUI.PROGRAM + " " + GUI.VERSION + ".";
-        println(welcome);
+        // Initialize file IO helper
+        fio = new FileIO();
 
-        // First check youtube-dl.exe
+        // Check youtube-dl.exe
         checkYTDL();
 
-        // Determine downloads folder path
+        // Determine downloads folder path and notify
         downloadsPath = getDwlFolderPath();
-
-        // Notify about downloads path
-        notifyln("\nAcquired downloads folder path: " + downloadsPath + ".");
-        notifyln("Downloaded media will be placed here.");
-        notifyln("Additionally, all text files here will be "
-                + "combined to create a cookie file, if so desired.");
-        notifyAndPrint("");
+        outputln("Downloaded media will be placed here.");
+        outputln("");
 
         // Notify about usage
-        notifyln("To begin, copy a video URL from your browser into "
-                + "your clipboard. Then come back here, and the URL "
-                + "will be automatically pasted into the URL field. "
-                + "When you have done so, click the Parse button to"
-                + " determine its available formats.");
+        outputln("To begin, copy a video URL from your browser into "
+                + "your clipboard (using Ctrl+C or right-click). ");
+        outputln("Then return to this program, "
+                + "click on the URL field, and the URL "
+                + "will be pasted into it automatically. ");
+        outputln("When you have done so, click the Parse button to"
+                + " determine the video's available formats.");
 
-        // Enable URL field and reset button
+        // Enable various GUI elements
         GUI.gui.getURLField().setEnabled(true);
+        GUI.gui.getCustArgField().setEnabled(true);
+        GUI.gui.getExportBut().setEnabled(true);
         GUI.gui.getResetBut().setEnabled(true);
+        GUI.gui.getCheckbox("exit").setEnabled(true);
+        GUI.gui.getCheckbox("cookie").setEnabled(true);
     }
 
     /**
@@ -73,13 +80,13 @@ public class Code {
     public final void checkYTDL() {
 
         // Notify and print
-        notifyAndPrint("\nChecking 'youtube-dl.exe'...");
+        outputln("\nChecking 'youtube-dl.exe'...");
 
         // If youtube-dl program does not exist
-        if (!isValidPath(ytdlPath)) {
+        if (!fio.isValidPath(ytdlPath)) {
 
             // Notify
-            notifyAndPrint("Not found. Will be downloaded next to exe and hidden");
+            outputln("Not found. Will be downloaded next to exe and hidden");
 
             // Get youtube-dl program
             String prog = "curl";
@@ -97,20 +104,19 @@ public class Code {
                 Files.setAttribute(ppo, "dos:hidden", true,
                         LinkOption.NOFOLLOW_LINKS);
             } catch (IOException e) {
-                System.err.println("SpecErr: " + comm.getErrOutput());
-                reportErr(e);
+                Code.outputerr(e);
             }
         } else {
 
             // Notify
-            notifyAndPrint("Found pre-existing!");
-            println("");
+            outputln("Found pre-existing!");
 
-            // Tell about version
-            Command versComm = runYTDL(new String[]{"--version"});
-            String version = extractCommOutputLine(versComm.getOutput());
-            notifyAndPrint("Version: " + version);
-            println("");
+            // Determine version
+            Command versionC = new Command(ytdlPath, new String[]{"--version"});
+            versionC.run();
+            String version = refineCommOutLine(versionC.getOutput());
+            outputln("Version: " + version);
+            outputln("");
         }
     }
 
@@ -122,7 +128,7 @@ public class Code {
     public final String getDwlFolderPath() {
 
         // Notify
-        println("Getting downloads path...");
+        outputln("Getting user's Downloads folder path...");
 
         // Holder for downloads path try
         String dwlPathTry;
@@ -133,7 +139,7 @@ public class Code {
         dwlPathTry = dwlPathTry.replace("UN", username);
 
         // If path is valid
-        if (isValidPath(dwlPathTry)) {
+        if (fio.isValidPath(dwlPathTry)) {
 
             // Notify and return
             notifyDwlPath(true, 1, dwlPathTry);
@@ -149,7 +155,7 @@ public class Code {
         dwlPathTry = Paths.get(userhome, "Downloads").toString();
 
         // If path is valid
-        if (isValidPath(dwlPathTry)) {
+        if (fio.isValidPath(dwlPathTry)) {
 
             // Notify and return
             notifyDwlPath(true, 2, dwlPathTry);
@@ -167,11 +173,11 @@ public class Code {
 
         // Extract downloads path and refine
         dwlPathTry = comm.getErrOutput().split(" ")[1];
-        dwlPathTry = extractCommOutputLine(dwlPathTry);
+        dwlPathTry = refineCommOutLine(dwlPathTry);
         dwlPathTry = dwlPathTry.replace("'", "");
 
         // If path is valid
-        if (isValidPath(dwlPathTry)) {
+        if (fio.isValidPath(dwlPathTry)) {
 
             // Notify and return
             notifyDwlPath(true, 3, dwlPathTry);
@@ -183,7 +189,7 @@ public class Code {
         }
 
         // If no methods worked, notify and exit
-        println("\nDownloads folder could not be found");
+        outputln("\nDownloads folder could not be found");
         System.exit(1);
 
         // Never reached
@@ -197,27 +203,23 @@ public class Code {
      */
     public void parseURL(String refinedURL) {
 
-        // Start parsing process notifications
-        TimerTask tt = startProcNot("Pars");
+        // Make extra arguments
+        ArrayList<String> extra = new ArrayList<>();
+        extra.add("--list-formats");
 
-        // Get format list for URL
-        ArrayList<String> extraArgList = new ArrayList<>();
-        extraArgList.add("--list-formats");
-        Command comm = runYTDLwithDef(refinedURL, extraArgList);
+        // Run slow parsing command
+        Command parseC = runSlowYTD(refinedURL, extra, "Parsing");
 
-        // Cancel process notifications after parsing finished
-        tt.cancel();
-
-        // If format list retrieval was successful
-        if (getYTCommStatus(comm, "Available formats for")) {
+        // If parsing was successful
+        if (getYTCommStatus(parseC, "Available formats for")) {
 
             // Notify
-            notifyln("\nSuccessfully parsed URL! Choose your desired format "
+            outputln("\nSuccessfully parsed URL! Choose your desired format "
                     + "in the dropdown format menu, "
                     + "then press the Download button.");
 
             // Get format list
-            String[] formats = comm.getOutput().split("NL:");
+            String[] formats = parseC.getOutput().split("NL:");
 
             // Get combo box
             JComboBox formatCB = GUI.gui.getFormatCB();
@@ -226,7 +228,7 @@ public class Code {
             formatCB.removeAllItems();
 
             // Add default option
-            formatCB.addItem("Default");
+            formatCB.addItem(defOpt);
 
             // Add certain output lines as formats
             for (String curFmtS : formats) {
@@ -253,8 +255,8 @@ public class Code {
 
             // Else if URL could not be parsed
             // Notify
-            notifyln("\nThe URL could not be parsed.");
-            notifyln("Error Info:" + comm.getErrOutput());
+            outputln("\nThe URL could not be parsed.");
+            outputln("Error Info:" + parseC.getErrOutput());
 
             // Remove format options and disable format selector
             JComboBox formatCB = GUI.gui.getFormatCB();
@@ -273,83 +275,60 @@ public class Code {
      */
     public void processDwlReq(String refinedURL) {
 
-        // Start download process notifications
-        TimerTask tt = startProcNot("Download");
-
         // Read local directory file list before download
-        String[] dirBefore = getLocalDirFileList();
+        String[] dirBefore = fio.getFileList("local");
 
-        // Download video and save status
-        boolean gotVideo = downloadVid(refinedURL);
+        // Get extra arguments for download
+        ArrayList<String> extra = getExtraDownloadArgs();
 
-        // Cancel process notifications after download finished
-        tt.cancel();
+        // Run slow parsing command
+        Command downloadC = runSlowYTD(refinedURL, extra, "Downloading");
 
         // If downloaded video successfully
-        if (gotVideo) {
+        if (getYTCommStatus(downloadC, "100%")) {
 
             // Notify
-            notifyln("\nDownloaded video successfully!");
+            outputln("\nDownloaded video successfully!");
 
             // Move video to downloads folder
-            String finalPath = moveToDownloads(dirBefore);
+            String finalPath = fio.moveToDownloads(dirBefore);
 
             // Notify and print about path
-            notifyAndPrint("Path: " + finalPath);
+            outputln("Path: " + finalPath);
 
             // Notify and print about size
             double sizeInBytes = new File(finalPath).length();
             double sizeInMB = sizeInBytes / (1024.0 * 1024.0);
             sizeInMB = Math.round(sizeInMB * 100.0) / 100.0;
-            notifyAndPrint("Size: " + sizeInMB + " MB");
+            outputln("Size: " + sizeInMB + " MB");
 
             // Exit if desired
-            if (GUI.gui.getCheckboxStatus("exitCheckbox")) {
+            if (GUI.gui.getCheckboxStatus("exit")) {
                 System.exit(0);
             }
+        } else {
+            // Else if video failed to download
+            outputln("\nDownload failed!");
+            outputln("Error Info:" + downloadC.getErrOutput());
         }
     }
 
     /**
-     * Get local directory file list
+     * Get extra arguments for download
      *
-     * @return
+     * @return Extra arguments list
      */
-    private String[] getLocalDirFileList() {
-
-        // Holder
-        String[] files = null;
-        try {
-
-            // Get file list as object array
-            Stream<Path> walk = Files.walk(Paths.get("."));
-            Object[] filesRaw = walk.map(x -> x.toString()).toArray();
-
-            // Convert object array to string array
-            files = Arrays.stream(filesRaw).toArray(String[]::new);
-
-        } catch (IOException e) {
-            reportErr(e);
-        }
-        return files;
-    }
-
-    /**
-     * Download video
-     *
-     * @return True if was successful
-     */
-    private boolean downloadVid(String refinedURL) {
+    private ArrayList<String> getExtraDownloadArgs() {
 
         // Extract format string option
         JComboBox formatCB = GUI.gui.getFormatCB();
         String formatS = (String) formatCB.getSelectedItem();
 
-        // Extra Argument holder
+        // Extra argument holder
         ArrayList<String> extraArgs = new ArrayList<>();
 
         // If default format not selected
-        if (!formatS.equalsIgnoreCase("Default")) {
+        if (!formatS.equals(defOpt)) {
 
             // Extract code of selected format
             formatS = formatS.substring(0, 6).trim();
@@ -363,67 +342,23 @@ public class Code {
             // run with no format argument
         }
 
-        // Run YTDL with default args and extra args
-        Command comm = runYTDLwithDef(refinedURL, extraArgs);
-
-        // Process output and return status
-        return getYTCommStatus(comm, "100%");
+        // Return extra arguments
+        return extraArgs;
     }
 
     /**
-     * Move the downloaded video to the downloads folder
      *
-     * @param dirBefore
-     */
-    private String moveToDownloads(String[] dirBefore) {
-
-        // Read new state of directory file list
-        String[] dirAfter = getLocalDirFileList();
-
-        // Convert new file list to ArrayList
-        ArrayList<String> dirAL = new ArrayList<>();
-        Collections.addAll(dirAL, dirAfter);
-
-        // Remove each entry from the file list before
-        for (String curFile : dirBefore) {
-            dirAL.remove(curFile);
-        }
-
-        // Arguments
-        String[] args = new String[2];
-
-        // If one file remains
-        if (dirAL.size() == 1) {
-
-            // Get the string remaining - the new file
-            String newFile = dirAL.get(0);
-            newFile = newFile.replace(".\\", "");
-            newFile = "\"" + newFile + "\"";
-
-            // Move file to downloads
-            String prog = "move";
-            args[0] = newFile;
-            args[1] = downloadsPath;
-            Command comm = new Command(prog, args);
-            comm.run();
-        }
-
-        // Deduce final path and return
-        args[0] = args[0].replace("\"", "");
-        String finalPath = args[1] + "\\" + args[0];
-        return finalPath;
-    }
-
-    /**
-     * Run youtube-dl command with default plus given arguments
+     * Run slow youtube-dl command with default plus given arguments
      *
-     * @param extraArgs
+     * @param refinedURL Refined URL
+     * @param extra Extra arguments
+     * @param desc Present-tense verb description of process
      * @return
      */
-    private Command runYTDLwithDef(String refinedURL,
-            ArrayList<String> extraArgs) {
+    private Command runSlowYTD(String refinedURL,
+            ArrayList<String> extra, String desc) {
 
-        // Holder
+        // Arguments
         ArrayList<String> argList = new ArrayList<>();
 
         // Add URL
@@ -432,74 +367,51 @@ public class Code {
         // Enable verbose logging
         argList.add("--verbose");
 
+        // If cookies enabled
+        if (GUI.gui.getCheckboxStatus("cookie")) {
+            
+            // Add cookie argument
+            argList.add("--cookies " + FileIO.cookieFP);
+        }
+
         // Add extra arguments
-        argList.addAll(extraArgs);
+        argList.addAll(extra);
 
-        // Always try to use cookies
-        // argList.add("--cookies cookies.txt");
-        //
-        // Run YTDL with argument list
-        return runYTDL(argList);
-    }
+        // Add custom arguments
+        argList.addAll(GUI.gui.getCustomArguments());
 
-    /**
-     * Start a process that takes a while.
-     *
-     * @param verbDesc A verb that describes the process.
-     * @return TimerTask that should be cancelled after the process is finished
-     */
-    private TimerTask startProcNot(String verbDesc) {
+        // Create comm
+        Command comm = new Command(ytdlPath, argList);
 
-        // Notify
-        notify("\n" + verbDesc + "ing...");
+        // Output command to be run
+        output(comm.toString() + "\n");
+
+        // Start process notifications
+        output(
+                "\n" + desc + "...");
 
         // Create printing dots task
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                GUI.code.notify(".");
+                Code.output(".");
             }
         };
 
         // Start printing dots intermittently,
         // to let user know that program is working
-        timer.scheduleAtFixedRate(tt, 10, 777);
-
-        // Return timer task for cancelling
-        return tt;
-    }
-
-    /**
-     * Run youtube-dl command with an argument list
-     *
-     * @param extraArgs
-     * @return
-     */
-    private Command runYTDL(ArrayList<String> argList) {
-
-        // Make command
-        Command comm = new Command(ytdlPath, argList);
+        timer.scheduleAtFixedRate(tt,
+                10, 777);
 
         // Run command
         comm.run();
 
-        // Return command
-        return comm;
-    }
+        // Cancel process notifications after parsing finished
+        tt.cancel();
 
-    /**
-     * Run youtube-dl command with an array of arguments
-     *
-     * @param extraArgs
-     * @return
-     */
-    private Command runYTDL(String[] argArray) {
-
-        // Make command
-        Command comm = new Command(ytdlPath, argArray);
-
-        // Run command
-        comm.run();
+        // Space
+        outputln(
+                "");
 
         // Return command
         return comm;
@@ -528,7 +440,7 @@ public class Code {
         msg += " (found '" + dwlPathTry + "')";
 
         // Print message
-        println(msg);
+        outputln(msg);
     }
 
     /**
@@ -542,6 +454,51 @@ public class Code {
         String[] args = {url};
         Command comm = new Command("explorer.exe", args);
         comm.run();
+    }
+
+    /**
+     * Output an exception to both the console and output TA
+     *
+     * @param e
+     */
+    public static void outputerr(Exception e) {
+
+        // Convert exception to string
+        String s = "Err: " + e.toString();
+
+        // Add to output TA without a new line
+        GUI.gui.updateOutput(s, false);
+
+        // Print out
+        System.out.print(s);
+    }
+
+    /**
+     * Output a string on a new line to both the console and output TA
+     *
+     * @param s
+     */
+    public static void outputln(String s) {
+
+        // Add to output TA with a new line
+        GUI.gui.updateOutput(s, true);
+
+        // Print out as new line
+        System.out.println(s);
+    }
+
+    /**
+     * Output a string to both the console and output TA
+     *
+     * @param s
+     */
+    private static void output(String s) {
+
+        // Add to output TA without a new line
+        GUI.gui.updateOutput(s, false);
+
+        // Print out
+        System.out.print(s);
     }
 
     /**
@@ -563,64 +520,7 @@ public class Code {
      * @param outputLine
      * @return
      */
-    private String extractCommOutputLine(String outputLine) {
+    private String refineCommOutLine(String outputLine) {
         return outputLine.replace("\nNL:", "");
-    }
-
-    /**
-     * Report error and exit
-     *
-     * @param e
-     */
-    private void reportErr(Exception e) {
-
-        // Print error info and exit
-        System.err.print("Err: " + e.toString());
-        System.exit(1);
-    }
-
-    /**
-     * Send a string to both the output area and console, on new lines
-     *
-     * @param line
-     */
-    private void notifyAndPrint(String line) {
-        notifyln(line);
-        println(line);
-    }
-
-    /**
-     * Send a string to output area only - on new line
-     *
-     * @param line
-     */
-    final void notifyln(String line) {
-        GUI.gui.updateOutput(line, true);
-    }
-
-    /**
-     * Send a string to output area only
-     *
-     * @param line
-     */
-    private void notify(String line) {
-        GUI.gui.updateOutput(line, false);
-    }
-
-    /**
-     * Return true if path is valid file or folder
-     *
-     * @param path
-     * @return
-     */
-    private boolean isValidPath(String path) {
-        return (new File(path)).exists();
-    }
-
-    /**
-     * Print a string on a new line (wrapper)
-     */
-    private void println(String s) {
-        System.out.println(s);
     }
 }
