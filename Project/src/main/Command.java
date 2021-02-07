@@ -13,6 +13,9 @@ import java.util.ArrayList;
  */
 public class Command {
 
+    // Start of output lines
+    private static final String lineStart = "\nNL:";
+
     // Command list
     private final ArrayList<String> cmdList;
 
@@ -21,18 +24,18 @@ public class Command {
     private String errOutput;
 
     /**
-     * Initialize command with program name and arg array
+     * Initialize command with program name and argument list
      *
      * @param progName Program
-     * @param args Arguments
+     * @param argList
      */
-    public Command(String progName, String[] args) {
+    public Command(String progName, ArrayList<String> argList) {
 
         // Add program name and space to command 
         String commS = progName + " ";
 
         // Add arguments to command
-        for (String curArg : args) {
+        for (String curArg : argList) {
             commS += curArg + " ";
         }
 
@@ -41,17 +44,6 @@ public class Command {
         cmdList.add("cmd");
         cmdList.add("/c");
         cmdList.add(commS);
-    }
-
-    /**
-     * Initialize command with program name and arg list (wrapper constructor)
-     *
-     * @param progName Program
-     * @param argList
-     */
-    public Command(String progName, ArrayList<String> argList) {
-
-        this(progName, argList.toArray(new String[0]));
     }
 
     /**
@@ -68,8 +60,9 @@ public class Command {
             // Extract output
             normOutput = getStringFromStream(p.getInputStream());
             errOutput = getStringFromStream(p.getErrorStream());
-
-            // Always print full output (console only)
+            
+            // Always print command and full output to console
+            System.out.println(toString() + " (for debugging)");
             printOutput();
 
         } catch (IOException e) {
@@ -100,7 +93,7 @@ public class Command {
         // Extract sting
         String curLine;
         while ((curLine = reader.readLine()) != null) {
-            output += " \nNL:" + curLine;
+            output += " " + lineStart + curLine;
         }
 
         // If line is very short
@@ -122,6 +115,16 @@ public class Command {
         System.out.println("Output: " + normOutput);
         System.out.println("Errors: " + errOutput);
         System.out.println();
+    }
+
+    /**
+     * Extract a line of command output
+     *
+     * @param outputLine
+     * @return
+     */
+    public static String refineCommOutLine(String outputLine) {
+        return outputLine.replace(lineStart, "");
     }
 
     /**

@@ -1,15 +1,11 @@
 package main;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JComboBox;
+import static main.GUI.*;
 
 /**
  * Contains 'back-end' methods
@@ -18,8 +14,14 @@ import javax.swing.JComboBox;
  */
 public class Code {
 
+    // Path to youtube-dl.exe
+    private final String ytdlPath = "youtube-dl.exe";
+
+    // Term used to describe youtube-dl.exe
+    private final String ytdlTerm = "Program Requirement";
+
     // Default option string
-    private final String defOpt = "Default/Best";
+    private final String defOpt = "Default (Best Audio and Video)";
 
     // Timer
     private final Timer timer;
@@ -27,10 +29,7 @@ public class Code {
     // FileIO helper object
     public static FileIO fio;
 
-    // Path to youtube-dl.exe
-    private final String ytdlPath = "youtube-dl.exe";
-
-    // The user's downloads folder path
+    // The user's Downloads folder path
     public static String downloadsPath;
 
     /**
@@ -51,7 +50,7 @@ public class Code {
         // Check youtube-dl.exe
         checkYTDL();
 
-        // Determine downloads folder path and notify
+        // Determine Downloads folder path and notify
         downloadsPath = getDwlFolderPath();
         outputln("Downloaded media will be placed here.");
         outputln("");
@@ -66,12 +65,7 @@ public class Code {
                 + " determine the video's available formats.");
 
         // Enable various GUI elements
-        GUI.gui.getURLField().setEnabled(true);
-        GUI.gui.getCustArgField().setEnabled(true);
-        GUI.gui.getExportBut().setEnabled(true);
-        GUI.gui.getResetBut().setEnabled(true);
-        GUI.gui.getCheckbox("exit").setEnabled(true);
-        GUI.gui.getCheckbox("cookie").setEnabled(true);
+        enableInterfaceElements();
     }
 
     /**
@@ -79,45 +73,61 @@ public class Code {
      */
     public final void checkYTDL() {
 
+        // Combine strings
+        String ytdlDesc = ytdlTerm + ": '" + ytdlPath + "'";
+
         // Notify and print
-        outputln("\nChecking 'youtube-dl.exe'...");
+        outputln("\nChecking " + ytdlDesc + "...");
 
         // If youtube-dl program does not exist
         if (!fio.isValidPath(ytdlPath)) {
 
             // Notify
-            outputln("Not found. Will be downloaded next to exe and hidden");
+            outputln("Not found. Will be downloaded next to exe and hidden.");
 
-            // Get youtube-dl program
+            // Run slow download command
             String prog = "curl";
-            String[] args = new String[4];
-            args[0] = "-L";
-            args[1] = "https://yt-dl.org/latest/youtube-dl.exe";
-            args[2] = "--output";
-            args[3] = ytdlPath;
-            Command comm = new Command(prog, args);
-            comm.run();
+            ArrayList<String> argList = new ArrayList<>();
+            argList.add("-L");
+            argList.add("https://yt-dl.org/latest/youtube-dl.exe");
+            argList.add("--output");
+            argList.add(ytdlPath);
+            String desc = ytdlTerm + ": Downloading";
+            runSlowComm(prog, argList, desc);
+
+            // If download didn't work
+            if (!fio.isValidPath(ytdlPath)) {
+
+                // Notify
+                handleCritErr(ytdlDesc + " could not be downloaded. "
+                        + "\nCheck your internet connection.");
+            }
 
             // Make executable hidden
-            Path ppo = Paths.get(ytdlPath);
-            try {
-                Files.setAttribute(ppo, "dos:hidden", true,
-                        LinkOption.NOFOLLOW_LINKS);
-            } catch (IOException e) {
-                Code.outputerr(e);
-            }
+            FileIO.hideFile(ytdlPath);
+
         } else {
 
             // Notify
             outputln("Found pre-existing!");
 
             // Determine version
-            Command versionC = new Command(ytdlPath, new String[]{"--version"});
+            ArrayList<String> vArgList = new ArrayList<>();
+            vArgList.add("--version");
+            Command versionC = new Command(ytdlPath, vArgList);
             versionC.run();
-            String version = refineCommOutLine(versionC.getOutput());
+            String version = Command.refineCommOutLine(versionC.getOutput());
             outputln("Version: " + version);
-            outputln("");
+
+            // Notify
+            outputln("If this version date looks too old, "
+                    + "delete the hidden '" + ytdlPath + "', "
+                    + "\nso it may be re-downloaded when the "
+                    + "program starts next.");
         }
+
+        // Space
+        outputln("");
     }
 
     /**
@@ -173,7 +183,7 @@ public class Code {
 
         // Extract downloads path and refine
         dwlPathTry = comm.getErrOutput().split(" ")[1];
-        dwlPathTry = refineCommOutLine(dwlPathTry);
+        dwlPathTry = Command.refineCommOutLine(dwlPathTry);
         dwlPathTry = dwlPathTry.replace("'", "");
 
         // If path is valid
@@ -189,11 +199,10 @@ public class Code {
         }
 
         // If no methods worked, notify and exit
-        outputln("\nDownloads folder could not be found");
-        System.exit(1);
+        handleCritErr("Downloads folder could not be found");
 
         // Never reached
-        return dwlPathTry;
+        return null;
     }
 
     /**
@@ -213,14 +222,6 @@ public class Code {
         // If parsing was successful
         if (getYTCommStatus(parseC, "Available formats for")) {
 
-            // Notify
-            outputln("\nSuccessfully parsed URL! Choose your desired format "
-                    + "in the dropdown format menu, "
-                    + "then press the Download button.");
-
-            // Get format list
-            String[] formats = parseC.getOutput().split("NL:");
-
             // Get combo box
             JComboBox formatCB = GUI.gui.getFormatCB();
 
@@ -229,6 +230,12 @@ public class Code {
 
             // Add default option
             formatCB.addItem(defOpt);
+
+            // Get format list
+            String[] formats = parseC.getOutput().split("NL:");
+
+            // Format count
+            int formatCount = 0;
 
             // Add certain output lines as formats
             for (String curFmtS : formats) {
@@ -243,14 +250,28 @@ public class Code {
 
                     // Add to combo box
                     formatCB.addItem(curFmtS);
+
+                    // Increase format count
+                    formatCount++;
                 }
             }
 
+            // Notify
+            outputln("\nSuccessfully parsed URL! "
+                    + formatCount + " formats discovered."
+                    + "\nChoose your desired format "
+                    + "in the dropdown format menu, "
+                    + "then press the Download button.");
+
+            //// Update interface
             // Enable combo box
             formatCB.setEnabled(true);
 
             // Disable parse button
             GUI.gui.getParseBut().setEnabled(false);
+
+            // Enable download button
+            GUI.gui.getDownloadBut().setEnabled(true);
         } else {
 
             // Else if URL could not be parsed
@@ -290,20 +311,19 @@ public class Code {
             // Notify
             outputln("\nDownloaded video successfully!");
 
-            // Move video to downloads folder
+            // Move video to Downloads folder
             String finalPath = fio.moveToDownloads(dirBefore);
 
             // Notify and print about path
             outputln("Path: " + finalPath);
 
             // Notify and print about size
-            double sizeInBytes = new File(finalPath).length();
-            double sizeInMB = sizeInBytes / (1024.0 * 1024.0);
-            sizeInMB = Math.round(sizeInMB * 100.0) / 100.0;
-            outputln("Size: " + sizeInMB + " MB");
+            outputln("Size: " + FileIO.getReadableFileSize(finalPath));
 
-            // Exit if desired
+            // If exit wanted
             if (GUI.gui.getCheckboxStatus("exit")) {
+
+                // Exit normally
                 System.exit(0);
             }
         } else {
@@ -352,11 +372,11 @@ public class Code {
      *
      * @param refinedURL Refined URL
      * @param extra Extra arguments
-     * @param desc Present-tense verb description of process
+     * @param desc Description of process
      * @return
      */
-    private Command runSlowYTD(String refinedURL,
-            ArrayList<String> extra, String desc) {
+    private Command runSlowYTD(String refinedURL, ArrayList<String> extra,
+            String desc) {
 
         // Arguments
         ArrayList<String> argList = new ArrayList<>();
@@ -368,8 +388,8 @@ public class Code {
         argList.add("--verbose");
 
         // If cookies enabled
-        if (GUI.gui.getCheckboxStatus("cookie")) {
-            
+        if (GUI.gui.isCookieFileEnabled()) {
+
             // Add cookie argument
             argList.add("--cookies " + FileIO.cookieFP);
         }
@@ -380,15 +400,29 @@ public class Code {
         // Add custom arguments
         argList.addAll(GUI.gui.getCustomArguments());
 
-        // Create comm
-        Command comm = new Command(ytdlPath, argList);
+        // Run slow command and return
+        return runSlowComm(ytdlPath, argList, desc);
+    }
+
+    /**
+     * Run a slow command, giving user progress indication during execution
+     *
+     * @param prog Program name
+     * @param argList Argument list
+     * @param desc Description of process (e.g. Downloading)
+     * @return
+     */
+    private Command runSlowComm(String prog, ArrayList<String> argList,
+            String desc) {
+
+        // Create command
+        Command comm = new Command(prog, argList);
 
         // Output command to be run
         output(comm.toString() + "\n");
 
         // Start process notifications
-        output(
-                "\n" + desc + "...");
+        output("\n" + desc + "...");
 
         // Create printing dots task
         TimerTask tt = new TimerTask() {
@@ -400,18 +434,16 @@ public class Code {
 
         // Start printing dots intermittently,
         // to let user know that program is working
-        timer.scheduleAtFixedRate(tt,
-                10, 777);
+        timer.scheduleAtFixedRate(tt, 10, 639);
 
         // Run command
         comm.run();
 
-        // Cancel process notifications after parsing finished
+        // Cancel process notifications (when command finished)
         tt.cancel();
 
         // Space
-        outputln(
-                "");
+        outputln("");
 
         // Return command
         return comm;
@@ -444,6 +476,25 @@ public class Code {
     }
 
     /**
+     * Enable interface elements after initialization is finished
+     */
+    private void enableInterfaceElements() {
+
+        // Enable text fields
+        gui.getURLField().setEnabled(true);
+        gui.getCustArgField().setEnabled(true);
+
+        // Enable buttons
+        gui.getExportBut().setEnabled(true);
+        gui.getRegenBut().setEnabled(true);
+        gui.getResetBut().setEnabled(true);
+
+        // Enable checkboxes
+        gui.getCheckbox("exit").setEnabled(true);
+        gui.getCheckbox("cookie").setEnabled(true);
+    }
+
+    /**
      * Open the given URL
      *
      * @param url
@@ -451,9 +502,32 @@ public class Code {
     public void openURL(String url) {
 
         // Run command to open URL via explorer.exe
-        String[] args = {url};
+        ArrayList<String> args = new ArrayList<>();
+        args.add(url);
         Command comm = new Command("explorer.exe", args);
         comm.run();
+    }
+
+    /**
+     * When critical error occurs, stop execution but keep window open until it
+     * is closed by user
+     *
+     * @param desc
+     */
+    public void handleCritErr(String desc) {
+
+        // Notify
+        outputln("CRITICAL ERROR: " + desc);
+        outputln("Program stopped. "
+                + "Take note of the error and close the program.");
+
+        // Sleep until user closes window
+        while (true) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+            }
+        }
     }
 
     /**
@@ -466,11 +540,11 @@ public class Code {
         // Convert exception to string
         String s = "Err: " + e.toString();
 
-        // Add to output TA without a new line
-        GUI.gui.updateOutput(s, false);
-
         // Print out
         System.out.print(s);
+
+        // Add to output TA without a new line
+        GUI.gui.updateOutput(s, false);
     }
 
     /**
@@ -480,11 +554,11 @@ public class Code {
      */
     public static void outputln(String s) {
 
-        // Add to output TA with a new line
-        GUI.gui.updateOutput(s, true);
-
         // Print out as new line
         System.out.println(s);
+
+        // Add to output TA with a new line
+        GUI.gui.updateOutput(s, true);
     }
 
     /**
@@ -494,11 +568,11 @@ public class Code {
      */
     private static void output(String s) {
 
-        // Add to output TA without a new line
-        GUI.gui.updateOutput(s, false);
-
         // Print out
         System.out.print(s);
+
+        // Add to output TA without a new line
+        GUI.gui.updateOutput(s, false);
     }
 
     /**
@@ -515,12 +589,12 @@ public class Code {
     }
 
     /**
-     * Extract a line of command output
+     * Return string in quotes
      *
-     * @param outputLine
+     * @param s
      * @return
      */
-    private String refineCommOutLine(String outputLine) {
-        return outputLine.replace("\nNL:", "");
+    public static String quoteS(String s) {
+        return "\"" + s + "\"";
     }
 }

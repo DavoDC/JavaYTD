@@ -7,6 +7,7 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -110,6 +111,7 @@ public class GUI extends JFrame {
         javax.swing.JLabel formatLabel = new javax.swing.JLabel();
         javax.swing.JTextField custArgField = new javax.swing.JTextField();
         javax.swing.JCheckBox cookieCheckbox = new javax.swing.JCheckBox();
+        javax.swing.JButton regenBut = new javax.swing.JButton();
         javax.swing.JMenuBar menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu readmeMenu = new javax.swing.JMenu();
         javax.swing.JMenu sitesMenu = new javax.swing.JMenu();
@@ -301,7 +303,7 @@ public class GUI extends JFrame {
         cookieCheckbox.setBackground(new java.awt.Color(51, 0, 51));
         cookieCheckbox.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         cookieCheckbox.setForeground(new java.awt.Color(255, 255, 255));
-        cookieCheckbox.setText("Generate and Use Cookies File");
+        cookieCheckbox.setText("Use Cookies File");
         cookieCheckbox.setActionCommand("");
         cookieCheckbox.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         cookieCheckbox.setEnabled(false);
@@ -314,6 +316,25 @@ public class GUI extends JFrame {
             }
         });
 
+        regenBut.setBackground(new java.awt.Color(204, 153, 255));
+        regenBut.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        regenBut.setForeground(new java.awt.Color(0, 0, 0));
+        regenBut.setText("Delete and Regenerate Cookies File");
+        regenBut.setToolTipText("");
+        regenBut.setAlignmentY(0.0F);
+        regenBut.setBorder(null);
+        regenBut.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        regenBut.setEnabled(false);
+        regenBut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        regenBut.setIconTextGap(0);
+        regenBut.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        regenBut.setName("regenBut"); // NOI18N
+        regenBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regenButActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
@@ -322,22 +343,24 @@ public class GUI extends JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelLayout.createSequentialGroup()
-                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(exitCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(custArgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(exitCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelLayout.createSequentialGroup()
-                                .addComponent(cookieCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(resetBut, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(custArgField)))
+                        .addComponent(cookieCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(regenBut, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(resetBut, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(formatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(formatCB, javax.swing.GroupLayout.PREFERRED_SIZE, 880, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(parseBut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(downloadBut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(downloadBut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelLayout.createSequentialGroup()
+                        .addComponent(custArgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(custArgField)))
                 .addGap(868, 868, 868))
             .addGroup(panelLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
@@ -384,10 +407,11 @@ public class GUI extends JFrame {
                     .addComponent(custArgField, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cookieCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(regenBut, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(resetBut, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(exitCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(exitCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cookieCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(downloadBut, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
@@ -451,7 +475,7 @@ public class GUI extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1041, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1041, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -493,12 +517,9 @@ public class GUI extends JFrame {
      * @param evt
      */
     private void resetButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButActionPerformed
-
-        // Notify
-        outputln("\nResetted downloader!");
-
-        // Reset URL field
+        // Reset fields
         getURLField().setText("");
+        getCustArgField().setText("");
 
         // Remove format options and disable format selector
         JComboBox formatCB = getFormatCB();
@@ -507,6 +528,9 @@ public class GUI extends JFrame {
 
         // Disable download button
         getDownloadBut().setEnabled(false);
+
+        // Notify
+        outputln("\nResetted downloader!");
     }//GEN-LAST:event_resetButActionPerformed
 
     /**
@@ -515,7 +539,6 @@ public class GUI extends JFrame {
      * @param evt
      */
     private void formatCBFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formatCBFocusGained
-
         // Enable download button
         getDownloadBut().setEnabled(true);
     }//GEN-LAST:event_formatCBFocusGained
@@ -526,12 +549,14 @@ public class GUI extends JFrame {
      * @param evt
      */
     private void parseButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parseButActionPerformed
+        // Generate cookie file if enabled
+        fio.genCookieFile(false);
 
         // Parse URL on separate thread
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                code.parseURL(GUI.gui.getRefinedURL());
+                code.parseURL(GUI.gui.getURLArg());
             }
         }, 5);
     }//GEN-LAST:event_parseButActionPerformed
@@ -569,12 +594,14 @@ public class GUI extends JFrame {
      * @param evt
      */
     private void downloadButAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButAction
+        // Generate cookie file if enabled
+        fio.genCookieFile(false);
 
         // Process download request on separate thread
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                code.processDwlReq(GUI.gui.getRefinedURL());
+                code.processDwlReq(GUI.gui.getURLArg());
             }
         }, 5);
     }//GEN-LAST:event_downloadButAction
@@ -585,9 +612,20 @@ public class GUI extends JFrame {
      * @param evt
      */
     private void exportButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButActionPerformed
+        // Log folder path
+        String logPath = "logs";
+
+        // If log folder does not exist
+        if (!fio.isValidPath(logPath)) {
+
+            // Create log folder
+            new File(logPath).mkdir();
+        }
 
         // Get file path to save to
-        String fpS = "JYTD-output-";
+        String fpS = logPath + "\\JYTD-output-";
+
+        // Add current date and time
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         Date date = new Date();
         fpS += dateFormat.format(date) + ".log";
@@ -609,11 +647,11 @@ public class GUI extends JFrame {
      */
     private void cookieCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cookieCheckboxActionPerformed
         // If cookie checkbox is selected
-        if (getCheckboxStatus("cookie")) {
+        if (isCookieFileEnabled()) {
 
             // Output usage
             String usage = "";
-            usage += "\nCookies enabled!";
+            usage += "\nCookies file usage enabled!";
             usage += "\nCookies can be used to provide credentials "
                     + "(e.g. for downloading members-only videos).";
             usage += "\nCookie files can be acquired by getting a "
@@ -621,20 +659,18 @@ public class GUI extends JFrame {
             usage += "\nAn example is the 'Get cookies.txt' extension "
                     + "by R. Shaw on the Chrome Web Store.";
             usage += "\nFor YouTube, cookies must be exported from "
-                    + "“www.youtube.com” and “myaccount.google.com”.";
+                    + "'www.youtube.com' and 'myaccount.google.com'.";
             usage += "\nEnsure all exported Netscape format cookie text files "
-                    + "are in your downloads folder.";
+                    + "are in your Downloads folder.";
+            usage += "\nThe exported cookie files in your Downloads folder "
+                    + "will be used to generate the cookies file.";
 
             // Output usage info
             outputln(usage);
-            
-            // Try generating cookies file
-            fio.genCookieFile();
-            
-        } else {
-            outputln("\nCookies disabled.");
-        }
 
+        } else {
+            outputln("\nCookies file usage disabled.");
+        }
     }//GEN-LAST:event_cookieCheckboxActionPerformed
 
     /**
@@ -643,14 +679,17 @@ public class GUI extends JFrame {
      * @param evt
      */
     private void memberMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memberMenuMouseClicked
-
-//        // Open supported sites URL
-//        String sites;
-//        sites = "https://github.com/ytdl-org/youtube-dl/";
-//        sites += "blob/master/docs/supportedsites.md";
-//        code.openURL(sites);
+        // Open GitHub wiki page
+        String wiki = "https://github.com/DavoDC/JavaYTD/";
+        wiki += "wiki/How-to-Download-Members-Only-Videos";
+        code.openURL(wiki);
     }//GEN-LAST:event_memberMenuMouseClicked
 
+    /**
+     * Exit checkbox
+     *
+     * @param evt
+     */
     private void exitCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitCheckboxActionPerformed
         // If exit checkbox is selected
         if (getCheckboxStatus("exit")) {
@@ -659,6 +698,24 @@ public class GUI extends JFrame {
             outputln("\nExit upon download disabled.");
         }
     }//GEN-LAST:event_exitCheckboxActionPerformed
+
+    /**
+     * Regenerate cookies file
+     *
+     * @param evt
+     */
+    private void regenButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regenButActionPerformed
+        // If cookies are not enabled
+        if (!isCookieFileEnabled()) {
+
+            // Notify and stop
+            outputln("\nCookie file usage is not enabled.");
+            return;
+        }
+
+        // Regenerate/generate cookie file
+        fio.genCookieFile(true);
+    }//GEN-LAST:event_regenButActionPerformed
 
     /**
      * Retrieve a component by its name
@@ -685,10 +742,7 @@ public class GUI extends JFrame {
                 comp = curComp;
                 break;
             }
-
         }
-
-        System.out.println();
 
         // If no component could be found
         if (comp == null) {
@@ -717,7 +771,7 @@ public class GUI extends JFrame {
         // If new line wanted
         if (newLine) {
 
-            // Add new line
+            // Add new line character
             outputS += "\n";
         }
 
@@ -729,30 +783,39 @@ public class GUI extends JFrame {
     }
 
     /**
-     * Get only important part of URL
+     * Get URL argument
      *
      * @return
      */
-    public String getRefinedURL() {
+    public String getURLArg() {
 
         // Get raw URL string
         String rawURL = GUI.gui.getURLField().getText();
+
+        // Holder
+        String refURL;
 
         // If URL contains ampersand
         if (rawURL.contains("&")) {
 
             // Refine, notify and return
-            return refineURLtype(rawURL, "&");
+            refURL = refineURLtype(rawURL, "&");
 
         } else if (rawURL.contains("?list=")) {
 
             // Refine, notify and return
-            return refineURLtype(rawURL, "?list=");
+            refURL = refineURLtype(rawURL, "?list=");
         } else {
 
-            // Otherwise, return raw URL
-            return rawURL;
+            // Otherwise, use raw URL
+            refURL = rawURL;
         }
+        
+        // Quote URL
+        refURL = Code.quoteS(refURL);
+
+        // Return final URL
+        return refURL;
     }
 
     /**
@@ -766,7 +829,7 @@ public class GUI extends JFrame {
         // Get split pattern
         String pattern = Pattern.quote(splitS);
 
-        // Split up by ampersand
+        // Split up by pattern
         String[] URLparts = rawURL.split(pattern);
 
         // Extract first part
@@ -846,6 +909,15 @@ public class GUI extends JFrame {
     }
 
     /**
+     * Return true if cookie file usage is enabled
+     *
+     * @return
+     */
+    public boolean isCookieFileEnabled() {
+        return getCheckboxStatus("cookie");
+    }
+
+    /**
      * Get custom arguments text field
      *
      * @return
@@ -882,6 +954,15 @@ public class GUI extends JFrame {
     }
 
     /**
+     * Get export button
+     *
+     * @return
+     */
+    public JButton getExportBut() {
+        return (JButton) getComponentByName("exportBut");
+    }
+
+    /**
      * Get parse button
      *
      * @return
@@ -900,12 +981,12 @@ public class GUI extends JFrame {
     }
 
     /**
-     * Get export button
+     * Get regenerate button
      *
      * @return
      */
-    public JButton getExportBut() {
-        return (JButton) getComponentByName("exportBut");
+    public JButton getRegenBut() {
+        return (JButton) getComponentByName("regenBut");
     }
 
     /**
