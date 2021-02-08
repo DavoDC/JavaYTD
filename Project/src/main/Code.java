@@ -212,6 +212,14 @@ public class Code {
      */
     public void parseURL(String refinedURL) {
 
+        // If playlist detected
+        if (refinedURL.contains("playlist?list=")) {
+            
+            // Notify
+            outputln("\nThis program does not support playlists");
+            return;
+        }
+
         // Make extra arguments
         ArrayList<String> extra = new ArrayList<>();
         extra.add("--list-formats");
@@ -219,14 +227,12 @@ public class Code {
         // Run slow parsing command
         Command parseC = runSlowYTD(refinedURL, extra, "Parsing");
 
+        // Retrieve combo box and remove items
+        JComboBox formatCB = GUI.gui.getFormatCB();
+        formatCB.removeAllItems();
+
         // If parsing was successful
         if (getYTCommStatus(parseC, "Available formats for")) {
-
-            // Get combo box
-            JComboBox formatCB = GUI.gui.getFormatCB();
-
-            // Remove options
-            formatCB.removeAllItems();
 
             // Add default option
             formatCB.addItem(defOpt);
@@ -279,9 +285,7 @@ public class Code {
             outputln("\nThe URL could not be parsed.");
             outputln("Error Info:" + parseC.getErrOutput());
 
-            // Remove format options and disable format selector
-            JComboBox formatCB = GUI.gui.getFormatCB();
-            formatCB.removeAllItems();
+            // Disable combo box
             formatCB.setEnabled(false);
 
             // Disable download button

@@ -212,7 +212,10 @@ public class GUI extends JFrame {
         formatCB.setForeground(new java.awt.Color(0, 0, 0));
         formatCB.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         formatCB.setEnabled(false);
+        formatCB.setMaximumSize(new java.awt.Dimension(35, 880));
+        formatCB.setMinimumSize(new java.awt.Dimension(35, 880));
         formatCB.setName("formatCB"); // NOI18N
+        formatCB.setPreferredSize(new java.awt.Dimension(35, 880));
         formatCB.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formatCBFocusGained(evt);
@@ -399,7 +402,7 @@ public class GUI extends JFrame {
                 .addComponent(parseBut, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(formatCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(formatCB, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(formatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -792,6 +795,13 @@ public class GUI extends JFrame {
         // Get raw URL string
         String rawURL = GUI.gui.getURLField().getText();
 
+        // If contains playlist
+        if (rawURL.contains("playlist?list=")) {
+            
+            // Return as is, will be caught in parse method
+            return rawURL;
+        }
+
         // Holder
         String refURL;
 
@@ -810,7 +820,7 @@ public class GUI extends JFrame {
             // Otherwise, use raw URL
             refURL = rawURL;
         }
-        
+
         // Quote URL
         refURL = Code.quoteS(refURL);
 

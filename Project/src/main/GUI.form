@@ -237,7 +237,7 @@
                   <Component id="parseBut" min="-2" pref="47" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="formatCB" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="formatCB" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="formatLabel" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -431,7 +431,16 @@
               </Border>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[35, 880]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[35, 880]"/>
+            </Property>
             <Property name="name" type="java.lang.String" value="formatCB" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[35, 880]"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="formatCBFocusGained"/>
