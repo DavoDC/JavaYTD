@@ -1,0 +1,2 @@
+Look for youtube ID in new file when moving file to dwl, 
+more stringent check
