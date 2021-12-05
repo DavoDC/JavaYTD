@@ -1,2 +1,15 @@
+Add fast download button - Skip parse, Default download
+
 Look for youtube ID in new file when moving file to dwl, 
-more stringent check
+more stringent check, will help when doing concurrent downloads
+
+Disable download until current dwl finished
+Disable everyhing when downloading, only enable after
+
+Add --help to show how CLI command works (only one atm)
+Add message to say, batch download done, exiting
+
+Change verbose to v 
+
+
+Show title after parsing?

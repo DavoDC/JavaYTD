@@ -214,7 +214,7 @@ public class Code {
 
         // If playlist detected
         if (refinedURL.contains("playlist?list=")) {
-            
+
             // Notify
             outputln("\nThis program does not support playlists");
             return;
@@ -350,6 +350,14 @@ public class Code {
 
         // Extra argument holder
         ArrayList<String> extraArgs = new ArrayList<>();
+
+        // If format string is null 
+        // (occurs when program is untouched, needed for CLI mode)
+        if (formatS == null) {
+            
+            // Return empty extra arguments
+            return extraArgs;
+        }
 
         // If default format not selected
         if (!formatS.equals(defOpt)) {

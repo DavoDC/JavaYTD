@@ -83,6 +83,22 @@ public class GUI extends JFrame {
 
         // Initialize timer
         timer = new Timer();
+
+        // If arguments are not null
+        if (args != null) {
+
+            // If arguments are not zero
+            if (args.length != 0) {
+
+                // Try to download each argument
+                for (String rawURL : args) {
+                    code.processDwlReq(rawURL);
+                }
+
+                // Exit
+                System.exit(0);
+            }
+        }
     }
 
     /**
@@ -797,7 +813,7 @@ public class GUI extends JFrame {
 
         // If contains playlist
         if (rawURL.contains("playlist?list=")) {
-            
+
             // Return as is, will be caught in parse method
             return rawURL;
         }
