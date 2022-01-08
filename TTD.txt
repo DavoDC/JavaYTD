@@ -1,3 +1,10 @@
+Put Jytd in its own folder in GDrive and update copy script accordingly
+
+Do date comparison on youtube-dl, update if no match
+
+Problem: Sometimes hangs and no way to tell if actually downloading
+Solution: Push output to 'last run log’ like netbeans, check on download there, let user know 
+
 Add fast download button - Skip parse, Default download
 
 Look for youtube ID in new file when moving file to dwl, 
@@ -13,3 +20,10 @@ Change verbose to v
 
 
 Show title after parsing?
+
+
+Make it fullscreen
+https://stackoverflow.com/questions/11570356/jframe-in-full-screen-java
+and adjust button locations well
+
+Space out, make it less clustered/full/cluttered
