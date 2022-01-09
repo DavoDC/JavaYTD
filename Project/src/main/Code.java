@@ -351,10 +351,10 @@ public class Code {
         // Extra argument holder
         ArrayList<String> extraArgs = new ArrayList<>();
 
-        // If format string is null 
+        // If format string is null
         // (occurs when program is untouched, needed for CLI mode)
         if (formatS == null) {
-            
+
             // Return empty extra arguments
             return extraArgs;
         }
