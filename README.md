@@ -1,6 +1,6 @@
 # JavaYTD
 
-A Java Swing GUI front-end for [youtube-dl](https://github.com/ytdl-org/youtube-dl) — download YouTube videos and audio without touching the command line.
+A Java Swing GUI front-end for [youtube-dl](https://github.com/ytdl-org/youtube-dl) - download YouTube videos and audio without touching the command line.
 
 ![Preview](https://github.com/DavoDC/JavaYTD/blob/master/Preview.png)
 
@@ -20,3 +20,7 @@ A Java Swing GUI front-end for [youtube-dl](https://github.com/ytdl-org/youtube-
 - Java (Swing / Nimbus L&F)
 - Wraps youtube-dl.exe via process execution
 - Built with Launch4J for Windows executable packaging
+
+## Development
+
+**Started:** June 2020 · Actively maintained
