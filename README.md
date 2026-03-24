@@ -1,5 +1,9 @@
 # JavaYTD
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G31WKOCN)
+
+
+
 A Java Swing GUI front-end for [youtube-dl](https://github.com/ytdl-org/youtube-dl) - download YouTube videos and audio without touching the command line.
 
 ![Preview](https://github.com/DavoDC/JavaYTD/blob/master/Preview.png)
