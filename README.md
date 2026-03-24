@@ -23,4 +23,4 @@ A Java Swing GUI front-end for [youtube-dl](https://github.com/ytdl-org/youtube-
 
 ## Development
 
-**Started:** June 2020 · Actively maintained
+**Started:** June 2020 · Not actively maintained
